@@ -1,0 +1,9 @@
+.next
+node_modules
+dist
+build
+.claude
+.kiro
+*.md
+CLAUDE.md
+slipify_project_brief.md
