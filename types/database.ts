@@ -6,7 +6,7 @@
 
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
 
-export interface Database {
+export type Database = {
   public: {
     Tables: {
       receipts: {
@@ -52,6 +52,7 @@ export interface Database {
           created_at?: string
           updated_at?: string
         }
+        Relationships: []
       }
       line_items: {
         Row: {
@@ -81,6 +82,7 @@ export interface Database {
           subtotal?: number
           created_at?: string
         }
+        Relationships: []
       }
       export_templates: {
         Row: {
@@ -113,6 +115,7 @@ export interface Database {
           created_at?: string
           updated_at?: string
         }
+        Relationships: []
       }
       api_usage_logs: {
         Row: {
@@ -148,6 +151,7 @@ export interface Database {
           error_message?: string | null
           created_at?: string
         }
+        Relationships: []
       }
       custom_account_categories: {
         Row: {
@@ -168,11 +172,12 @@ export interface Database {
           name?: string
           created_at?: string
         }
+        Relationships: []
       }
     }
-    Views: Record<string, never>
-    Functions: Record<string, never>
-    Enums: Record<string, never>
-    CompositeTypes: Record<string, never>
+    Views: { [_ in never]: never }
+    Functions: { [_ in never]: never }
+    Enums: { [_ in never]: never }
+    CompositeTypes: { [_ in never]: never }
   }
 }

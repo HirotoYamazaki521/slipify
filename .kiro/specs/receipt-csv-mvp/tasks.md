@@ -42,7 +42,7 @@
 
 - [ ] 3. データアクセス層の実装（Task 2.1 完了後）
 
-- [ ] 3.1 (P) ReceiptRepository の実装
+- [x] 3.1 (P) ReceiptRepository の実装
   - receipts テーブルと line_items テーブルへの CRUD 操作をまとめた Repository を実装する
   - ユーザーの全レシートを登録日時の降順で取得する機能を実装する
   - レシートを品目リスト付きで取得する機能（単件・複数件）を実装する
@@ -50,13 +50,13 @@
   - 全操作で user_id フィルタを明示的に付与し、RLS と多重防御を実現する
   - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5_
 
-- [ ] 3.2 (P) ExportTemplateRepository の実装
+- [x] 3.2 (P) ExportTemplateRepository の実装
   - export_templates テーブルへの CRUD 操作を実装する
   - テンプレート一覧取得・単件取得・デフォルトテンプレート取得を実装する
   - テンプレートの作成・更新・削除を実装する
   - _Requirements: 6.1, 6.2, 6.4_
 
-- [ ] 3.3 (P) UsageLogRepository の実装
+- [x] 3.3 (P) UsageLogRepository の実装
   - api_usage_logs テーブルへの INSERT 専用 Repository を実装する
   - 成功・失敗の両方のログエントリを記録できる設計にする
   - ログ書き込みエラーが発生しても例外を呼び出し元へ伝播しない
