@@ -64,7 +64,7 @@
 
 - [ ] 4. AI 解析エンジンの実装（Task 1 完了後、Task 3 と並列実行可能）
 
-- [ ] 4.1 (P) AnthropicWrapper の実装
+- [x] 4.1 (P) AnthropicWrapper の実装
   - @anthropic-ai/sdk を用いた Claude API 通信ラッパーを実装する
   - ANTHROPIC_API_KEY はサーバー側環境変数からのみ取得し、クライアントに露出しない
   - 25 秒タイムアウトを設定し、超過時は TIMEOUT エラーを返す
@@ -73,7 +73,7 @@
   - Task 3.3 のインターフェースを参照して実装する（Task 3.3 と並列実行可能）
   - _Requirements: 7.1, 7.2, 7.3_
 
-- [ ] 4.2 ReceiptExtractionService の実装（4.1 完了後）
+- [x] 4.2 ReceiptExtractionService の実装（4.1 完了後）
   - Claude API の tool_use でレシート解析ツールを定義し、JSON スキーマで出力形式を強制する
   - ツール定義に勘定科目の固定リストを enum として含め、予測値を強制する
   - Claude のレスポンスをパースして構造化データに変換する
