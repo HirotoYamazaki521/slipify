@@ -164,13 +164,13 @@
 
 - [ ] 8. テスト
 
-- [ ] 8.1 (P) ビジネスロジックのユニットテスト
+- [x] 8.1 (P) ビジネスロジックのユニットテスト
   - CsvGeneratorService の複数品目展開・デリミタ差異・UTF-8 BOM 付与・特殊文字エスケープをテストする
   - ReceiptExtractionService の各エラーシナリオ（UNREADABLE_IMAGE・TIMEOUT・PARSE_FAILED）をモックでテストする
   - AnthropicWrapper のログ書き込み失敗時に処理が中断しないことをテストする
   - _Requirements: 3.4, 3.5, 5.2, 5.3, 7.3_
 
-- [ ] 8.2 (P) API インテグレーションテスト
+- [x] 8.2 (P) API インテグレーションテスト
   - POST /api/receipts のアップロード → 解析 → DB 保存の一連フローを検証する
   - GET /api/exports/csv のテンプレート適用・Content-Disposition ヘッダを検証する
   - Auth Middleware の未認証アクセスリダイレクトを検証する
