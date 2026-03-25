@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { createReceiptRepository } from '@/lib/repositories/receipt-repository'
-import { ReceiptCard } from '@/components/receipt-card'
+import { createExportTemplateRepository } from '@/lib/repositories/export-template-repository'
+import { ReceiptsListClient } from '@/components/receipts-list-client'
 import { formatCurrency } from '@/lib/utils/format'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
@@ -13,8 +14,15 @@ export default async function ReceiptsPage() {
 
   if (!user) redirect('/login')
 
-  const repo = await createReceiptRepository()
-  const receipts = await repo.findMany(user.id)
+  const [receiptRepo, templateRepo] = await Promise.all([
+    createReceiptRepository(),
+    createExportTemplateRepository(),
+  ])
+
+  const [receipts, templates] = await Promise.all([
+    receiptRepo.findMany(user.id),
+    templateRepo.findMany(user.id),
+  ])
 
   const total = receipts.length
   const totalAmount = receipts.reduce((sum, r) => sum + r.totalAmount, 0)
@@ -43,26 +51,8 @@ export default async function ReceiptsPage() {
         </div>
       </div>
 
-      {/* レシート一覧 */}
-      {receipts.length === 0 ? (
-        <div className="rounded-lg border border-dashed border-gray-300 py-16 text-center">
-          <p className="text-gray-500">レシートがまだ登録されていません</p>
-          <Link
-            href="/receipts/upload"
-            className="mt-3 inline-block text-sm text-blue-600 hover:underline"
-          >
-            最初のレシートをアップロード
-          </Link>
-        </div>
-      ) : (
-        <ul className="space-y-3">
-          {receipts.map((receipt) => (
-            <li key={receipt.id}>
-              <ReceiptCard receipt={receipt} />
-            </li>
-          ))}
-        </ul>
-      )}
+      {/* レシート一覧（チェックボックス選択 + CSV エクスポート） */}
+      <ReceiptsListClient receipts={receipts} templates={templates} />
     </div>
   )
 }

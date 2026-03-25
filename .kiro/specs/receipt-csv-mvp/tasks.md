@@ -127,7 +127,7 @@
 
 - [ ] 7. CSV エクスポート（Task 6 完了後）
 
-- [ ] 7.1 (P) CsvGeneratorService の実装
+- [x] 7.1 (P) CsvGeneratorService の実装
   - ExportTemplate の定義（カラム順・表示名・区切り文字）に従って CSV を生成する
   - 品目が複数のレシートは品目ごとに行を展開する（1 レシート = N 行）
   - UTF-8 BOM を先頭に付加し、Excel での文字化けを防ぐ
@@ -135,27 +135,27 @@
   - テンプレート未指定時は組み込みデフォルト列順（日付・店名・品目名・単価・数量・小計・合計・税額・勘定科目）で生成する
   - _Requirements: 5.2, 5.3, 5.5, 6.3, 6.4_
 
-- [ ] 7.2 GET /api/exports/csv Route Handler の実装（7.1・7.3 完了後）
+- [x] 7.2 GET /api/exports/csv Route Handler の実装（7.1・7.3 完了後）
   - クエリパラメータ receiptIds と templateId を受け取り、CSV を生成してファイルとして配信する
   - Content-Disposition ヘッダで slipify_receipts_YYYYMMDD.csv 形式のファイル名を指定する
   - エクスポート対象が 0 件の場合はエラーを返す
   - _Requirements: 5.1, 5.4, 5.5_
 
-- [ ] 7.3 (P) テンプレート管理 API の実装
+- [x] 7.3 (P) テンプレート管理 API の実装
   - GET /api/export-templates でユーザーのテンプレート一覧を返す
   - POST /api/export-templates でテンプレートを新規作成する
   - PUT /api/export-templates/[id] でカラム定義・区切り文字・名称を更新する
   - DELETE /api/export-templates/[id] でテンプレートを削除する
   - _Requirements: 6.1, 6.2, 6.3_
 
-- [ ] 7.4 CSV フォーマット設定ページの実装（7.3 完了後）
+- [x] 7.4 CSV フォーマット設定ページの実装（7.3 完了後）
   - 現在のカラム定義（表示名・データソース・順序）を一覧表示する設定画面を実装する
   - カラムの追加・削除・並び替え・表示名変更の UI を実装する
   - 区切り文字（カンマ・タブ・セミコロン）の選択機能を実装する
   - テンプレートを保存する処理と、カラム未設定時のエラー表示を実装する
   - _Requirements: 6.1, 6.2, 6.3, 6.5_
 
-- [ ] 7.5 レシート一覧からの CSV エクスポート UI（7.2 完了後）
+- [x] 7.5 レシート一覧からの CSV エクスポート UI（7.2 完了後）
   - レシート一覧からエクスポート対象を選択する UI を実装する
   - テンプレート選択（デフォルト or 保存済みカスタム）のドロップダウンを実装する
   - エクスポートボタンクリックで CSV ダウンロードを起動する
