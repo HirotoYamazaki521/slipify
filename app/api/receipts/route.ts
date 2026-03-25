@@ -3,6 +3,32 @@ import { randomUUID } from 'node:crypto'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 import { createReceiptExtractionService } from '@/lib/anthropic/receipt-extraction-service'
 import { createReceiptRepository } from '@/lib/repositories/receipt-repository'
+import type { Receipt } from '@/types/domain'
+
+// ────────────────────────────────────────────
+// GET /api/receipts — レシート一覧取得
+// ────────────────────────────────────────────
+export async function GET(_request: NextRequest) {
+  const supabase = await createServerSupabaseClient()
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser()
+
+  if (authError || !user) {
+    return NextResponse.json(
+      { error: { code: 'UNAUTHORIZED', message: '認証が必要です' } },
+      { status: 401 }
+    )
+  }
+
+  const repo = await createReceiptRepository()
+  const receipts: Receipt[] = await repo.findMany(user.id)
+  const total = receipts.length
+  const totalAmount = receipts.reduce((sum, r) => sum + r.totalAmount, 0)
+
+  return NextResponse.json({ receipts, total, totalAmount })
+}
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
 const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'] as const
