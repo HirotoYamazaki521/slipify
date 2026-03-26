@@ -106,7 +106,7 @@ export async function POST(request: NextRequest) {
   // 6. Supabase Storage へアップロード
   const mimeType = file.type as AllowedMimeType
   const ext = MIME_TO_EXT[mimeType]
-  const storagePath = `receipts/${user.id}/${randomUUID()}.${ext}`
+  const storagePath = `${user.id}/${randomUUID()}.${ext}`
 
   const { error: storageError } = await supabase.storage
     .from('receipts')
