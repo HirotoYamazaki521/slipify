@@ -61,12 +61,12 @@ export default async function ReceiptsPage({ searchParams }: { searchParams: Pag
   const aggregation = computeAggregation(receipts)
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-8">
+    <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold text-gray-900">レシート一覧</h1>
         <Link
           href="/receipts/upload"
-          className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+          className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
         >
           アップロード
         </Link>
@@ -83,7 +83,7 @@ export default async function ReceiptsPage({ searchParams }: { searchParams: Pag
 
       {/* 集計サマリ */}
       {receipts.length > 0 && (
-        <div className="mb-4 grid grid-cols-2 gap-4">
+        <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
           <MonthlySummaryPanel summaries={aggregation.monthlySummaries} />
           <CategorySummaryPanel summaries={aggregation.categorySummaries} />
         </div>

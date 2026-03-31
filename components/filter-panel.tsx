@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useState, useEffect, useRef } from 'react'
 import { formatCurrency } from '@/lib/utils/format'
+import { INPUT_CLASS, INPUT_COMPACT_CLASS } from '@/lib/styles/form'
 
 interface FilterPanelProps {
   availableCategories: string[]
@@ -132,22 +133,22 @@ export function FilterPanel({ availableCategories, filteredCount, filteredTotal 
       {hasFilters && (
         <div className="mb-3 flex flex-wrap gap-1.5">
           {keyword && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-700">
+            <span className="inline-flex items-center gap-1 rounded-full bg-indigo-100 px-2 py-0.5 text-xs text-indigo-700">
               &ldquo;{keyword}&rdquo;
               <button
                 onClick={() => { setKeywordInput(''); updateParams({ keyword: null }) }}
-                className="ml-0.5 hover:text-blue-900"
+                className="ml-0.5 hover:text-indigo-900"
               >
                 ×
               </button>
             </span>
           )}
           {(startDate || endDate) && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-700">
+            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-xs text-emerald-700">
               {startDate || '…'} 〜 {endDate || '…'}
               <button
                 onClick={() => updateParams({ startDate: null, endDate: null })}
-                className="ml-0.5 hover:text-green-900"
+                className="ml-0.5 hover:text-emerald-900"
               >
                 ×
               </button>
@@ -174,30 +175,30 @@ export function FilterPanel({ availableCategories, filteredCount, filteredTotal 
           value={keywordInput}
           onChange={(e) => handleKeywordChange(e.target.value)}
           placeholder="店名・品目名で検索"
-          className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className={INPUT_CLASS}
         />
       </div>
 
-      {/* 日付範囲 */}
-      <div className="mb-1 flex gap-2">
+      {/* 日付範囲 — モバイルで縦積み */}
+      <div className="mb-1 flex flex-col gap-2 sm:flex-row sm:items-center">
         <input
           type="date"
           value={startDate}
           onChange={(e) => handleDateChange('startDate', e.target.value)}
-          className="flex-1 rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:border-blue-500 focus:outline-none"
+          className={`flex-1 ${INPUT_COMPACT_CLASS}`}
         />
-        <span className="self-center text-gray-400">〜</span>
+        <span className="hidden text-gray-400 sm:inline">〜</span>
         <input
           type="date"
           value={endDate}
           onChange={(e) => handleDateChange('endDate', e.target.value)}
-          className="flex-1 rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:border-blue-500 focus:outline-none"
+          className={`flex-1 ${INPUT_COMPACT_CLASS}`}
         />
       </div>
       {dateError && <p className="mb-2 text-xs text-red-500">{dateError}</p>}
 
       {/* クイック日付選択 */}
-      <div className="mb-3 mt-2 flex gap-1.5">
+      <div className="mb-3 mt-2 flex flex-wrap gap-1.5">
         {(['thisMonth', 'lastMonth', 'last3Months'] as const).map((preset) => (
           <button
             key={preset}
@@ -212,14 +213,14 @@ export function FilterPanel({ availableCategories, filteredCount, filteredTotal 
       {/* 勘定科目フィルタ */}
       <div>
         <p className="mb-1.5 text-xs font-medium text-gray-500">勘定科目</p>
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex max-h-32 flex-wrap gap-1.5 overflow-y-auto sm:max-h-none">
           {availableCategories.map((cat) => (
             <button
               key={cat}
               onClick={() => toggleCategory(cat)}
               className={`rounded-full px-2 py-0.5 text-xs transition ${
                 selectedCategories.includes(cat)
-                  ? 'bg-purple-600 text-white'
+                  ? 'bg-indigo-600 text-white'
                   : 'border border-gray-300 text-gray-600 hover:bg-gray-50'
               }`}
             >

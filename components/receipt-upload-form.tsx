@@ -80,7 +80,7 @@ export function ReceiptUploadForm() {
           accept="image/jpeg,image/png,image/webp"
           onChange={handleFileChange}
           disabled={isUploading}
-          className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:rounded-md file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-sm file:font-medium file:text-blue-700 hover:file:bg-blue-100 disabled:opacity-50"
+          className="mt-1 block w-full text-sm text-gray-900 file:mr-4 file:rounded-md file:border-0 file:bg-indigo-50 file:px-4 file:py-2 file:text-sm file:font-medium file:text-indigo-700 hover:file:bg-indigo-100 disabled:opacity-50"
         />
         {validationError && (
           <p role="alert" className="mt-2 text-sm text-red-600">
@@ -110,7 +110,7 @@ export function ReceiptUploadForm() {
       <button
         type="submit"
         disabled={!selectedFile || isUploading}
-        className="w-full rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
+        className="w-full rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50"
       >
         {isUploading ? (
           <span className="flex items-center justify-center gap-2">

@@ -128,10 +128,10 @@ export function createReceiptExtractionService(): ReceiptExtractionService {
       const storeName = String(input.store_name ?? '')
       const receiptDate = String(input.receipt_date ?? '')
       const totalAmount = Number(input.total_amount)
-      const taxAmount = Number(input.tax_amount)
+      const taxAmount = input.tax_amount != null ? Number(input.tax_amount) : 0
       const rawCategory = input.predicted_account_category
 
-      if (!storeName || !receiptDate || isNaN(totalAmount) || isNaN(taxAmount)) {
+      if (!storeName || !receiptDate || isNaN(totalAmount)) {
         return {
           ok: false,
           error: { code: 'PARSE_FAILED', message: '必須フィールドが不足しています' },
