@@ -71,8 +71,17 @@ export async function GET(request: Request) {
   const csvService = createCsvGeneratorService()
   const csv = csvService.generate(receipts, template)
 
-  const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '')
-  const filename = `slipify_receipts_${dateStr}.csv`
+  const startDateParam = searchParams.get('startDate')
+  const endDateParam = searchParams.get('endDate')
+  let filename: string
+  if (startDateParam || endDateParam) {
+    const start = (startDateParam ?? '').replace(/-/g, '')
+    const end = (endDateParam ?? '').replace(/-/g, '')
+    filename = `slipify_receipts_${start}_${end}.csv`
+  } else {
+    const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '')
+    filename = `slipify_receipts_${dateStr}.csv`
+  }
 
   return new Response(csv, {
     status: 200,

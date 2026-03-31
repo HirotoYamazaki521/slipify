@@ -2,11 +2,18 @@ import Link from 'next/link'
 import { createReceiptRepository } from '@/lib/repositories/receipt-repository'
 import { createExportTemplateRepository } from '@/lib/repositories/export-template-repository'
 import { ReceiptsListClient } from '@/components/receipts-list-client'
-import { formatCurrency } from '@/lib/utils/format'
+import { FilterPanel } from '@/components/filter-panel'
+import { MonthlySummaryPanel } from '@/components/monthly-summary-panel'
+import { CategorySummaryPanel } from '@/components/category-summary-panel'
+import { computeAggregation } from '@/lib/search/aggregation-service'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
+import { ACCOUNT_CATEGORY_LIST } from '@/types/domain'
+import type { ReceiptFilterParams } from '@/types/domain'
 import { redirect } from 'next/navigation'
 
-export default async function ReceiptsPage() {
+type PageSearchParams = Promise<{ [key: string]: string | string[] | undefined }>
+
+export default async function ReceiptsPage({ searchParams }: { searchParams: PageSearchParams }) {
   const supabase = await createServerSupabaseClient()
   const {
     data: { user },
@@ -14,18 +21,44 @@ export default async function ReceiptsPage() {
 
   if (!user) redirect('/login')
 
-  const [receiptRepo, templateRepo] = await Promise.all([
+  const params = await searchParams
+  const keyword = typeof params.keyword === 'string' ? params.keyword : undefined
+  const startDate = typeof params.startDate === 'string' ? params.startDate : undefined
+  const endDate = typeof params.endDate === 'string' ? params.endDate : undefined
+  const categoriesStr = typeof params.categories === 'string' ? params.categories : undefined
+  const categories = categoriesStr ? categoriesStr.split(',').filter(Boolean) : undefined
+
+  const filter: ReceiptFilterParams = {}
+  if (keyword) filter.keyword = keyword
+  if (startDate) filter.startDate = startDate
+  if (endDate) filter.endDate = endDate
+  if (categories && categories.length > 0) filter.categories = categories
+
+  const hasFilters = Object.keys(filter).length > 0
+
+  const [receiptRepo, templateRepo, customCatsResult] = await Promise.all([
     createReceiptRepository(),
     createExportTemplateRepository(),
+    supabase
+      .from('custom_account_categories')
+      .select('name')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false }),
   ])
 
+  const customCategoryNames = (customCatsResult.data ?? []).map(
+    (r: { name: string }) => r.name
+  )
+  const availableCategories = [...ACCOUNT_CATEGORY_LIST, ...customCategoryNames]
+
   const [receipts, templates] = await Promise.all([
-    receiptRepo.findMany(user.id),
+    hasFilters ? receiptRepo.findManyFiltered(user.id, filter) : receiptRepo.findMany(user.id),
     templateRepo.findMany(user.id),
   ])
 
-  const total = receipts.length
-  const totalAmount = receipts.reduce((sum, r) => sum + r.totalAmount, 0)
+  const filteredCount = receipts.length
+  const filteredTotal = receipts.reduce((sum, r) => sum + r.totalAmount, 0)
+  const aggregation = computeAggregation(receipts)
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
@@ -39,20 +72,36 @@ export default async function ReceiptsPage() {
         </Link>
       </div>
 
-      {/* サマリ */}
-      <div className="mb-6 grid grid-cols-2 gap-4">
-        <div className="rounded-lg border border-gray-200 bg-white p-4 text-center shadow-sm">
-          <p className="text-sm text-gray-500">登録件数</p>
-          <p className="mt-1 text-2xl font-bold text-gray-900">{total} 件</p>
-        </div>
-        <div className="rounded-lg border border-gray-200 bg-white p-4 text-center shadow-sm">
-          <p className="text-sm text-gray-500">合計金額</p>
-          <p className="mt-1 text-2xl font-bold text-gray-900">{formatCurrency(totalAmount)}</p>
-        </div>
+      {/* フィルタパネル */}
+      <div className="mb-4">
+        <FilterPanel
+          availableCategories={availableCategories}
+          filteredCount={filteredCount}
+          filteredTotal={filteredTotal}
+        />
       </div>
 
+      {/* 集計サマリ */}
+      {receipts.length > 0 && (
+        <div className="mb-4 grid grid-cols-2 gap-4">
+          <MonthlySummaryPanel summaries={aggregation.monthlySummaries} />
+          <CategorySummaryPanel summaries={aggregation.categorySummaries} />
+        </div>
+      )}
+
+      {/* レシートが0件のメッセージ */}
+      {hasFilters && receipts.length === 0 && (
+        <div className="mb-4 rounded-lg border border-dashed border-gray-300 py-8 text-center">
+          <p className="text-gray-500">該当するレシートが見つかりませんでした</p>
+        </div>
+      )}
+
       {/* レシート一覧（チェックボックス選択 + CSV エクスポート） */}
-      <ReceiptsListClient receipts={receipts} templates={templates} />
+      <ReceiptsListClient
+        receipts={receipts}
+        templates={templates}
+        filterParams={filter}
+      />
     </div>
   )
 }

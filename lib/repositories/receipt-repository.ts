@@ -1,5 +1,5 @@
 import { createServerSupabaseClient } from '@/lib/supabase/server'
-import type { Receipt, LineItem, AccountCategory } from '@/types/domain'
+import type { Receipt, LineItem, AccountCategory, ReceiptFilterParams } from '@/types/domain'
 
 // DB行の型（supabase gen types が生成するのと同等の形状）
 export interface ReceiptRow {
@@ -80,6 +80,7 @@ export interface CreateReceiptData {
 
 export interface ReceiptRepository {
   findMany(userId: string): Promise<Receipt[]>
+  findManyFiltered(userId: string, filter: ReceiptFilterParams): Promise<Receipt[]>
   findByIdWithLineItems(
     id: string,
     userId: string
@@ -110,6 +111,55 @@ export async function createReceiptRepository(): Promise<ReceiptRepository> {
 
       if (error) throw new Error(`findMany failed: ${error.message}`)
       return (data ?? []).map(mapReceiptRow)
+    },
+
+    async findManyFiltered(userId: string, filter: ReceiptFilterParams): Promise<Receipt[]> {
+      const { keyword, startDate, endDate, categories } = filter
+
+      let rows: ReceiptRow[]
+
+      if (keyword) {
+        // 店名・品目名の横断検索は RPC 関数に委譲
+        const { data, error } = await supabase.rpc('search_receipts', {
+          p_user_id: userId,
+          p_keyword: keyword,
+          p_start_date: startDate ?? null,
+          p_end_date: endDate ?? null,
+        })
+        if (error) throw new Error(`findManyFiltered (rpc) failed: ${error.message}`)
+        rows = (data ?? []) as ReceiptRow[]
+
+        // RPC は日付フィルタを内包するため、カテゴリのみポストフィルタ
+        if (categories && categories.length > 0) {
+          rows = rows.filter(
+            (r) =>
+              (r.account_category !== null && categories.includes(r.account_category)) ||
+              categories.includes(r.ai_account_category)
+          )
+        }
+      } else {
+        // キーワードなし: Supabase JS チェーンでフィルタ
+        let query = supabase
+          .from('receipts')
+          .select('*')
+          .eq('user_id', userId)
+
+        if (startDate) query = query.gte('receipt_date', startDate)
+        if (endDate) query = query.lte('receipt_date', endDate)
+
+        if (categories && categories.length > 0) {
+          const cats = categories.join(',')
+          query = query.or(
+            `account_category.in.(${cats}),ai_account_category.in.(${cats})`
+          )
+        }
+
+        const { data, error } = await query.order('created_at', { ascending: false })
+        if (error) throw new Error(`findManyFiltered failed: ${error.message}`)
+        rows = (data ?? []) as ReceiptRow[]
+      }
+
+      return rows.map(mapReceiptRow)
     },
 
     async findByIdWithLineItems(

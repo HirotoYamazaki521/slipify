@@ -4,14 +4,15 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { formatCurrency, formatDate } from '@/lib/utils/format'
 import { buildExportUrl, validateExportSelection } from '@/lib/csv/export-url-builder'
-import type { Receipt, ExportTemplate } from '@/types/domain'
+import type { Receipt, ExportTemplate, ReceiptFilterParams } from '@/types/domain'
 
 interface ReceiptsListClientProps {
   receipts: Receipt[]
   templates: ExportTemplate[]
+  filterParams?: ReceiptFilterParams
 }
 
-export function ReceiptsListClient({ receipts, templates }: ReceiptsListClientProps) {
+export function ReceiptsListClient({ receipts, templates, filterParams }: ReceiptsListClientProps) {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
   const [selectedTemplateId, setSelectedTemplateId] = useState<string>('')
   const [exportError, setExportError] = useState<string | null>(null)
@@ -47,7 +48,10 @@ export function ReceiptsListClient({ receipts, templates }: ReceiptsListClientPr
     }
 
     const templateId = selectedTemplateId || null
-    const url = buildExportUrl(ids, templateId)
+    const url = buildExportUrl(ids, templateId, {
+      startDate: filterParams?.startDate,
+      endDate: filterParams?.endDate,
+    })
     window.location.href = url
   }
 

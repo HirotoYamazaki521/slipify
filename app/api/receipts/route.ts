@@ -6,9 +6,10 @@ import { createReceiptRepository } from '@/lib/repositories/receipt-repository'
 import type { Receipt } from '@/types/domain'
 
 // ────────────────────────────────────────────
-// GET /api/receipts — レシート一覧取得
+// GET /api/receipts — レシート一覧取得（フィルタ対応）
+// クエリパラメータ: keyword, startDate, endDate, categories（カンマ区切り）
 // ────────────────────────────────────────────
-export async function GET(_request: NextRequest) {
+export async function GET(request: NextRequest) {
   const supabase = await createServerSupabaseClient()
   const {
     data: { user },
@@ -22,8 +23,26 @@ export async function GET(_request: NextRequest) {
     )
   }
 
+  const { searchParams } = new URL(request.url)
+  const keyword = searchParams.get('keyword') ?? undefined
+  const startDate = searchParams.get('startDate') ?? undefined
+  const endDate = searchParams.get('endDate') ?? undefined
+  const categoriesStr = searchParams.get('categories') ?? undefined
+  const categories = categoriesStr ? categoriesStr.split(',').filter(Boolean) : undefined
+
+  const filter = {
+    ...(keyword && { keyword }),
+    ...(startDate && { startDate }),
+    ...(endDate && { endDate }),
+    ...(categories && categories.length > 0 && { categories }),
+  }
+
   const repo = await createReceiptRepository()
-  const receipts: Receipt[] = await repo.findMany(user.id)
+  const hasFilters = Object.keys(filter).length > 0
+  const receipts: Receipt[] = hasFilters
+    ? await repo.findManyFiltered(user.id, filter)
+    : await repo.findMany(user.id)
+
   const total = receipts.length
   const totalAmount = receipts.reduce((sum, r) => sum + r.totalAmount, 0)
 
