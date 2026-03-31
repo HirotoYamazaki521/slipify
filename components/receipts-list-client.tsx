@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { formatCurrency, formatDate } from '@/lib/utils/format'
 import { buildExportUrl, validateExportSelection } from '@/lib/csv/export-url-builder'
+import { INPUT_COMPACT_CLASS } from '@/lib/styles/form'
 import type { Receipt, ExportTemplate, ReceiptFilterParams } from '@/types/domain'
 
 interface ReceiptsListClientProps {
@@ -58,12 +59,14 @@ export function ReceiptsListClient({ receipts, templates, filterParams }: Receip
   if (receipts.length === 0) {
     return (
       <div className="rounded-lg border border-dashed border-gray-300 py-16 text-center">
-        <p className="text-gray-500">レシートがまだ登録されていません</p>
+        <p className="text-4xl">🧾</p>
+        <p className="mt-3 font-medium text-gray-700">まだレシートが登録されていません</p>
+        <p className="mt-1 text-sm text-gray-500">最初のレシートを取り込みましょう</p>
         <Link
           href="/receipts/upload"
-          className="mt-3 inline-block text-sm text-blue-600 hover:underline"
+          className="mt-4 inline-block rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
         >
-          最初のレシートをアップロード
+          レシートをアップロード
         </Link>
       </div>
     )
@@ -81,7 +84,7 @@ export function ReceiptsListClient({ receipts, templates, filterParams }: Receip
               if (el) el.indeterminate = someSelected
             }}
             onChange={toggleAll}
-            className="h-4 w-4 rounded border-gray-300 text-blue-600"
+            className="h-4 w-4 rounded border-gray-300 text-indigo-600"
           />
           すべて選択
         </label>
@@ -95,13 +98,13 @@ export function ReceiptsListClient({ receipts, templates, filterParams }: Receip
           return (
             <li
               key={receipt.id}
-              className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-3 shadow-sm"
+              className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-3 shadow-sm transition-all duration-150 hover:border-indigo-200 hover:shadow-md"
             >
               <input
                 type="checkbox"
                 checked={selectedIds.has(receipt.id)}
                 onChange={() => toggleReceipt(receipt.id)}
-                className="h-4 w-4 flex-shrink-0 rounded border-gray-300 text-blue-600"
+                className="h-4 w-4 flex-shrink-0 rounded border-gray-300 text-indigo-600"
               />
               <Link
                 href={`/receipts/${receipt.id}`}
@@ -109,14 +112,14 @@ export function ReceiptsListClient({ receipts, templates, filterParams }: Receip
               >
                 <div className="flex items-start justify-between">
                   <div className="min-w-0 flex-1">
-                    <p className="truncate font-medium text-gray-900">{receipt.storeName}</p>
+                    <p className="truncate font-semibold text-gray-900">{receipt.storeName}</p>
                     <p className="mt-0.5 text-sm text-gray-500">{formatDate(receipt.receiptDate)}</p>
                   </div>
                   <div className="ml-4 text-right">
-                    <p className="font-semibold text-gray-900">
+                    <p className="font-bold text-indigo-700">
                       {formatCurrency(receipt.totalAmount)}
                     </p>
-                    <span className="mt-0.5 inline-block rounded-full bg-blue-50 px-2 py-0.5 text-xs text-blue-700">
+                    <span className="mt-0.5 inline-block rounded-full bg-indigo-50 px-2 py-0.5 text-xs text-indigo-700">
                       {displayCategory}
                     </span>
                   </div>
@@ -130,17 +133,17 @@ export function ReceiptsListClient({ receipts, templates, filterParams }: Receip
       {/* CSV エクスポートパネル */}
       <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
         <h2 className="mb-3 text-sm font-semibold text-gray-700">CSV エクスポート</h2>
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
           {/* テンプレート選択 */}
           <div className="flex items-center gap-2">
-            <label htmlFor="template-select" className="text-sm text-gray-600">
+            <label htmlFor="template-select" className="shrink-0 text-sm text-gray-600">
               フォーマット:
             </label>
             <select
               id="template-select"
               value={selectedTemplateId}
               onChange={(e) => setSelectedTemplateId(e.target.value)}
-              className="rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className={`w-full sm:w-auto ${INPUT_COMPACT_CLASS}`}
             >
               <option value="">デフォルト</option>
               {templates.map((tmpl) => (
@@ -155,7 +158,7 @@ export function ReceiptsListClient({ receipts, templates, filterParams }: Receip
           {/* エクスポートボタン */}
           <button
             onClick={handleExport}
-            className="rounded-md bg-green-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-green-700"
+            className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
           >
             CSV をダウンロード
           </button>

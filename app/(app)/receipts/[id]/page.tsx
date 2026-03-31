@@ -41,10 +41,10 @@ export default async function ReceiptDetailPage({ params }: PageProps) {
   ).map((r) => ({ id: r.id, userId: r.user_id, name: r.name, createdAt: r.created_at }))
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-8">
+    <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
       {/* ヘッダー */}
       <div className="mb-6 flex items-center gap-3">
-        <Link href="/receipts" className="text-sm text-blue-600 hover:underline">
+        <Link href="/receipts" className="text-sm text-indigo-600 hover:underline">
           ← 一覧に戻る
         </Link>
       </div>

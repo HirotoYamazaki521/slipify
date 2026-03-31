@@ -140,7 +140,7 @@ export function CsvFormatEditor({ initialTemplate }: CsvFormatEditorProps) {
           value={name}
           onChange={(e) => setName(e.target.value)}
           disabled={isSaving}
-          className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:opacity-50"
+          className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 disabled:opacity-50"
         />
       </div>
 
@@ -154,7 +154,7 @@ export function CsvFormatEditor({ initialTemplate }: CsvFormatEditorProps) {
           value={delimiter}
           onChange={(e) => setDelimiter(e.target.value as Delimiter)}
           disabled={isSaving}
-          className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:opacity-50"
+          className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 disabled:opacity-50"
         >
           {DELIMITERS.map((d) => (
             <option key={d} value={d}>
@@ -182,7 +182,7 @@ export function CsvFormatEditor({ initialTemplate }: CsvFormatEditorProps) {
             <p className="text-sm text-gray-500">カラムが設定されていません</p>
             <button
               onClick={handleAddColumn}
-              className="mt-2 text-sm text-blue-600 hover:underline"
+              className="mt-2 text-sm text-indigo-600 hover:underline"
             >
               最初のカラムを追加
             </button>
@@ -204,7 +204,7 @@ export function CsvFormatEditor({ initialTemplate }: CsvFormatEditorProps) {
                   onChange={(e) => handleLabelChange(index, e.target.value)}
                   placeholder="表示名"
                   disabled={isSaving}
-                  className="w-32 rounded border border-gray-300 px-2 py-1 text-sm focus:border-blue-500 focus:outline-none disabled:opacity-50"
+                  className="w-32 rounded border border-gray-300 px-2 py-1 text-sm focus:border-indigo-500 focus:outline-none disabled:opacity-50"
                 />
 
                 {/* データソース */}
@@ -212,7 +212,7 @@ export function CsvFormatEditor({ initialTemplate }: CsvFormatEditorProps) {
                   value={col.sourceField}
                   onChange={(e) => handleSourceFieldChange(index, e.target.value)}
                   disabled={isSaving}
-                  className="flex-1 rounded border border-gray-300 px-2 py-1 text-sm focus:border-blue-500 focus:outline-none disabled:opacity-50"
+                  className="flex-1 rounded border border-gray-300 px-2 py-1 text-sm focus:border-indigo-500 focus:outline-none disabled:opacity-50"
                 >
                   {RECEIPT_SOURCE_FIELDS.map((field) => (
                     <option key={field} value={field}>
@@ -267,7 +267,7 @@ export function CsvFormatEditor({ initialTemplate }: CsvFormatEditorProps) {
         <button
           onClick={handleSave}
           disabled={isSaving}
-          className="rounded-md bg-blue-600 px-6 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+          className="rounded-md bg-indigo-600 px-6 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
         >
           {isSaving ? '保存中...' : '保存する'}
         </button>

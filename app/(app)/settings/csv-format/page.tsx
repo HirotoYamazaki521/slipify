@@ -20,10 +20,10 @@ export default async function CsvFormatPage() {
     templates.find((t) => t.isDefault) ?? templates[0] ?? null
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-8">
+    <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
       {/* ヘッダー */}
       <div className="mb-6 flex items-center gap-3">
-        <Link href="/receipts" className="text-sm text-blue-600 hover:underline">
+        <Link href="/receipts" className="text-sm text-indigo-600 hover:underline">
           ← レシート一覧
         </Link>
       </div>

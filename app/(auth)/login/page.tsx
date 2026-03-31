@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useActionState } from 'react'
 import { signIn, type AuthState } from '@/app/actions/auth'
+import { INPUT_CLASS, PRIMARY_BUTTON_CLASS, LABEL_CLASS, ERROR_BOX_CLASS } from '@/lib/styles/form'
 
 const initialState: AuthState = {
   error: null,
@@ -13,16 +14,19 @@ export default function LoginPage() {
   const [state, formAction, isPending] = useActionState(signIn, initialState)
 
   return (
-    <div className="rounded-lg bg-white p-8 shadow-md">
-      <h1 className="mb-6 text-2xl font-bold text-gray-900">ログイン</h1>
+    <div className="rounded-xl bg-white p-8 shadow-lg">
+      <div className="mb-6 text-center">
+        <p className="text-2xl font-bold text-indigo-600">Slipify</p>
+        <h1 className="mt-1 text-lg font-semibold text-gray-900">ログイン</h1>
+      </div>
 
       <form action={formAction} className="space-y-4">
         {state.error && (
-          <div className="rounded-md bg-red-50 p-3 text-sm text-red-700">{state.error}</div>
+          <div className={ERROR_BOX_CLASS}>{state.error}</div>
         )}
 
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="email" className={LABEL_CLASS}>
             メールアドレス
           </label>
           <input
@@ -31,7 +35,7 @@ export default function LoginPage() {
             type="email"
             autoComplete="email"
             required
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className={`mt-1 ${INPUT_CLASS}`}
           />
           {state.fieldErrors.email && (
             <p className="mt-1 text-xs text-red-600">{state.fieldErrors.email}</p>
@@ -39,7 +43,7 @@ export default function LoginPage() {
         </div>
 
         <div>
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="password" className={LABEL_CLASS}>
             パスワード
           </label>
           <input
@@ -48,7 +52,7 @@ export default function LoginPage() {
             type="password"
             autoComplete="current-password"
             required
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className={`mt-1 ${INPUT_CLASS}`}
           />
           {state.fieldErrors.password && (
             <p className="mt-1 text-xs text-red-600">{state.fieldErrors.password}</p>
@@ -58,7 +62,7 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={isPending}
-          className="w-full rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
+          className={`w-full ${PRIMARY_BUTTON_CLASS}`}
         >
           {isPending ? 'ログイン中...' : 'ログイン'}
         </button>
@@ -66,7 +70,7 @@ export default function LoginPage() {
 
       <p className="mt-4 text-center text-sm text-gray-600">
         アカウントをお持ちでない方は{' '}
-        <Link href="/signup" className="text-blue-600 hover:underline">
+        <Link href="/signup" className="text-indigo-600 hover:underline">
           新規登録
         </Link>
       </p>
