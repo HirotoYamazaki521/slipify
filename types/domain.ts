@@ -133,6 +133,21 @@ export interface CustomAccountCategory {
 }
 
 // ---------------------------------------------------
+// 検索・フィルタ
+// ---------------------------------------------------
+
+/**
+ * レシート検索フィルタ条件。
+ * startDate <= endDate の制約はアプリ層（FilterPanel）で保証する。
+ */
+export interface ReceiptFilterParams {
+  keyword?: string    // 店名・品目名 部分一致（大小文字区別なし）
+  startDate?: string  // ISO 8601 日付 YYYY-MM-DD
+  endDate?: string    // ISO 8601 日付 YYYY-MM-DD
+  categories?: string[] // 勘定科目コード一覧（OR 条件: account_category または ai_account_category）
+}
+
+// ---------------------------------------------------
 // Result 型（エラーハンドリング）
 // ---------------------------------------------------
 
